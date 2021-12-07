@@ -97,3 +97,23 @@ cluster-2-vnmdm   True    xcluster.cnp.example.org   77s
 ```
 And finally there should be new `namespaces` in the host cluster, with pods running `vcluster` and the ArgoCD guestbook application.
 At ArgoCD, there should be two Kubernetes clusters and to each a corresponding guestbook application (see screenshot at the top).
+
+
+Get current states:
+
+```bash
+# state of claim
+kubectl get clusters.cnp.example.org
+
+# state of compositions
+kubectl get xclusters.cnp.example.org
+
+# state of argocd clusters
+kubectl get clusters.cluster.argocd.crossplane.io
+
+# state of virtual clusters
+kubectl get releases.helm.crossplane.io
+
+# state of applications
+kubectl get objects.kubernetes.crossplane.io
+```
