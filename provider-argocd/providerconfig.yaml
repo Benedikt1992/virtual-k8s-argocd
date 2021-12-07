@@ -1,9 +1,9 @@
 apiVersion: argocd.crossplane.io/v1alpha1
 kind: ProviderConfig
 metadata:
-  name: default
+  name: argocd-provider
 spec:
-  serverAddr: localhost:8080
+  serverAddr: localhost:8443
   insecure: true
   plainText: false
   credentials:

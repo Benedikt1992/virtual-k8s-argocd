@@ -3,13 +3,18 @@ This repo contains a crossplane composition to spin up [virtual Kubernetes clust
 
 ![](argocd.png)
 
+## Install crossplane
+```bash
+kubectl create ns crossplane-system
+helm install crossplane --namespace crossplane-system crossplane-stable/crossplane
+```
 
 ## Install ArgoCD
 Bring up a local ArgoCD instance if you don't have a hosted one available:
 ```bash
 kubectl create ns argocd
-kubectl apply -n argocd --force -f https://raw.githubusercontent.com/argoproj/argo-cd/release-2.2/manifests/install.yaml
-kubectl -n argocd port-forward svc/argocd-server 8080:8080
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl -n argocd port-forward svc/argocd-server 8443:443
 ```
 get admin password for web login:
 ```bash
@@ -31,15 +36,9 @@ kubectl patch configmap/argocd-rbac-cm \
 create JWTs and a corresponding Kubernetes Secret, so that `provider-argocd` is able to connect to ArgoCD:
 ```bash
 ARGOCD_ADMIN_SECRET=$(kubectl view-secret argocd-initial-admin-secret -n argocd -q)
-ARGOCD_ADMIN_TOKEN=$(curl -s -X POST -k -H "Content-Type: application/json" --data '{"username":"admin","password":"'$ARGOCD_ADMIN_SECRET'"}' https://localhost:8080/api/v1/session | jq -r .token)
-ARGOCD_TOKEN=$(curl -s -X POST -k -H "Authorization: Bearer $ARGOCD_ADMIN_TOKEN" -H "Content-Type: application/json" https://localhost:8080/api/v1/account/provider-argocd/token | jq -r .token)
+ARGOCD_ADMIN_TOKEN=$(curl -s -X POST -k -H "Content-Type: application/json" --data '{"username":"admin","password":"'$ARGOCD_ADMIN_SECRET'"}' https://localhost:8443/api/v1/session | jq -r .token)
+ARGOCD_TOKEN=$(curl -s -X POST -k -H "Authorization: Bearer $ARGOCD_ADMIN_TOKEN" -H "Content-Type: application/json" https://localhost:8443/api/v1/account/provider-argocd/token | jq -r .token)
 kubectl create secret generic argocd-credentials -n crossplane-system --from-literal=authToken="$ARGOCD_TOKEN"
-```
-
-## Install crossplane
-```bash
-kubectl create ns crossplane-system
-helm install crossplane --namespace crossplane-system crossplane-stable/crossplane
 ```
 
 ### provider-helm
@@ -75,12 +74,12 @@ Now that we have everything in place we can get started and schedule some Kubern
 
 First create the composition and the corresponding composite resource definition:
 ```bash
-k apply -f crossplane/composition.yaml
-k apply -f crossplane/xrd.yaml
+kubectl apply -f crossplane/composition.yaml
+kubectl apply -f crossplane/xrd.yaml
 ```
 And now the actual clusters:
 ```bash
-k apply -f crossplane/xrc.yaml
+kubectl apply -f crossplane/xrc.yaml
 ```
 They will show up in the `default` namespace:
 ```bash

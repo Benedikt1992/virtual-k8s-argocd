@@ -90,6 +90,8 @@ spec:
                   name: # patched
                   namespace: # patched
                   key: certificate-authority
+          providerConfigRef:
+              name: argocd-provider
       patches:
         - fromFieldPath: metadata.uid
           toFieldPath: metadata.name
@@ -155,6 +157,8 @@ spec:
                     prune: true
                   syncOptions:
                   - CreateNamespace=true
+          providerConfigRef:
+              name: argocd-provider
       patches:
         - fromFieldPath: metadata.name
           toFieldPath: spec.forProvider.manifest.metadata.name
