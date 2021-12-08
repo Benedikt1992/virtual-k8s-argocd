@@ -157,8 +157,6 @@ spec:
                     prune: true
                   syncOptions:
                   - CreateNamespace=true
-          providerConfigRef:
-              name: argocd-provider
       patches:
         - fromFieldPath: metadata.name
           toFieldPath: spec.forProvider.manifest.metadata.name
