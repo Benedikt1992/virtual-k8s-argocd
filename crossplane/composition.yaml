@@ -148,10 +148,10 @@ spec:
                 source:
                   repoURL: https://github.com/argoproj/argocd-example-apps.git
                   targetRevision: HEAD
-                  path: guestbook
+                  path: # patched
                 destination:
                   name: # patched
-                  namespace: guestbook
+                  namespace: # patched
                 syncPolicy:
                   automated:
                     prune: true
@@ -166,3 +166,7 @@ spec:
                 fmt: "%s-guestbook"
         - fromFieldPath: metadata.name
           toFieldPath: spec.forProvider.manifest.spec.destination.name
+        - fromFieldPath: spec.appPath
+          toFieldPath: spec.forProvider.manifest.spec.source.path
+        - fromFieldPath: spec.appPath
+          toFieldPath: spec.forProvider.manifest.spec.destination.namespace

@@ -105,7 +105,7 @@ Get current states:
 # state of claim
 kubectl get clusters.cnp.example.org
 
-# state of compositions
+# state of compositions and namespaces of the running pods
 kubectl get xclusters.cnp.example.org
 
 # state of argocd clusters
@@ -116,4 +116,7 @@ kubectl get releases.helm.crossplane.io
 
 # state of applications
 kubectl get objects.kubernetes.crossplane.io
+
+# connect to a pod in the virtual namespace
+kubectl -n <namspace of virtual cluster> port-forward <pod name> 8888:80
 ```

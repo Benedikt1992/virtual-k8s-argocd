@@ -20,4 +20,8 @@ spec:
         properties:
           spec:
             type: object
-            properties: {}
+            properties: 
+              appPath:
+                type: string
+            required:
+            - appPath
